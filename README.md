@@ -9,7 +9,7 @@ install pip
 Checkout ContactManagement from GitHub and install the requirements
 mkdir dev
 cd dev
-git clone https://github.com/higherstar/Contact_Management.git
+git clone https://github.com/polaris-pentacle/Contact_Management.git
 cd Contact_Management
 
 Build and install client apps
