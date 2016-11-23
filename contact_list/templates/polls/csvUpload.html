@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load staticfiles %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" /> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'polls/main.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+<script>
+$(document).ready(function(){
+	// The event listener for the file upload
+    // document.getElementById('csvfile').addEventListener('change', upload, false);
+
+    // Method that checks that the browser supports the HTML5 File API
+    function browserSupportFileUpload() {
+        var isCompatible = false;
+        if (window.File && window.FileReader && window.FileList && window.Blob) {
+        isCompatible = true;
+        }
+        return isCompatible;
+    }
+
+    // Method that reads and processes the selected file
+    function upload(evt) {
+    if (!browserSupportFileUpload()) {
+        alert('The File APIs are not fully supported in this browser!');
+        } else {
+            var data = null;
+            var file = evt.target.files[0];
+            var reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = function(event) {
+                var csvData = event.target.result;
+                console.log(csvData);
+                // data = $.csv.toArrays(csvData);
+                var allTextLines = csvData.split(/\r\n|\n/);
+                var headers = allTextLines[0].split(',');
+                // alert(headers[2]);
+                var datalist = [allTextLines.length];
+                for(var i = 0; i < allTextLines.length - 1; i ++){
+                	datalist[i] = allTextLines[i + 1].split(',');
+                }
+                var j=0;
+                for(var i = 0; i < allTextLines.length - 1; i++){
+                	if (datalist[i].length == headers.length) {
+                		datalist[j++] = datalist[i];
+                	}                	
+                }
+                // console.log(datalist);
+                // if (data && data.length > 0) {
+                //   alert('Imported -' + data.length + '- rows successfully!');
+                // } else {
+                //     alert('No data to import!');
+                // }
+            };
+            reader.onerror = function() {
+                alert('Unable to read ' + file.fileName);
+            };
+        }
+    }
+});
+</script>
+</head>
+<body>		
+	<div class="container" style="margin:50px;">
+		<div class="header">
+			<table class="">
+				<tr>
+					<td style="">
+						<h1 style="font-size:55px;">Import Prospects</h1>
+					</td>
+					<td style="vertical-align: bottom; position: relative; left: 10%;"><b>SELECT FILE</b></td>
+					<td style="vertical-align: bottom; color:grey; position: relative; left: 15%;">></td>
+					<td style="vertical-align: bottom; color:grey; position: relative; left: 20%;">MATCH FIELDS</td>
+					<td style="vertical-align: bottom; position: relative; left: 73%;">
+						<button class="btn" style="background-color: white; border-color:#d2d4d2;color: rgb(87, 189, 180);width: 130%;" onclick="cancelCsv()">Cancel</button>
+					</td>
+					<td  style="vertical-align: bottom; position: relative; left: 78%;">
+						<!-- <button class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="importCsv();">Upload </button> -->
+					</td>
+				</tr>
+			</table>			
+		</div>	
+		<div class="content">
+			<h3 style="margin-top: 60px; font-size:20px">Select the CSV file to import</h3>
+			<form action="{% url 'contact_list:csvImportView' %}" method="post" enctype="multipart/form-data">{% csrf_token %}
+				<input type="text" id="uploadFilePath" name="title" style="border-color: rgba(142, 138, 138, 0.33);width: 50%;height: 33px;border-radius: 4px;margin-right: 10px;" >
+				<input type="file" class="filestyle" id="csv_file" name="file" accept=".csv" style="display:none">
+				<label for="csv_file" class="btn btn-primary" style="color: #2997a7;background-color: #ffffff;border-color: #d0d2d4;width: 10%;">Browse</label>
+				<input type="submit" value="Upload -->" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228,228);width:130%;width: 10%; height: 33px; border-radius:4px;left:46%;top:-125px;position:relative;">
+				<input type="submit" value="Upload -->" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228,228);width:130%;width: 10%; height: 33px; border-radius:4px;left:35%;top:318px;position:relative;">
+			</form>
+			
+
+			<div style="margin-top:70px">
+				<b style="font-size:20px;">How should duplicate prospects be handled?</b>
+				<p>
+				<input type="radio" id="radio" class="" name="radio" style="margin-top:20px; margin-right:5px">Ignore the new entry and keep the existing prospect intact.
+				<p>
+				<input type="radio" id="radio" class="btn btn-primary" name="radio" style="margin-right:5px">Update the existing prospect with changed or new fields.
+			</div>
+		</div>	
+		<div class="footer" style="margin-top:100px">
+			<hr style="border-top: 1px solid #c1b9b9;">
+			<table class="">
+				<tr>					
+					<td style="vertical-align: bottom; position: relative; left: 730%;">
+						<button class="btn" style="background-color: white; border-color:#d2d4d2;color: rgb(87, 189, 180);width: 130%; left: 860%;  position: relative;"  onclick="cancelCsv()">Cancel</button>
+					</td>
+					<td  style="vertical-align: bottom; position: relative; left: 754%;">
+						<!-- <button class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="importCsv();">Upload -</button> -->
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+<script>
+	$('input[type=file]').change(function () {
+         var filePath=$('#csv_file').val(); 
+         // alert(filePath);
+         document.getElementById("uploadFilePath").value = filePath;
+     });
+	function cancelCsv(){
+		window.location.href = "/contact_list/";
+	}
+	// function importCsv(){
+	// 	window.location.href = "http://127.0.0.1:8000/contact_list/csvImportView";
+	// }
+</script>
+</body>
+</html>

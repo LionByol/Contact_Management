@@ -1,0 +1,27 @@
+
+select{
+	margin-bottom: 20px;
+	border-radius: 4px;
+	height: 40px;
+	background-color: #cccccc
+}
+#mainlist th{
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+   background-color: #ccc;
+   height: 	30px;
+   color:grey;
+}
+#mainlist td{
+   height: 	30px;
+   border-bottom: 1px solid #ddd;
+}
+.button-active{
+	color:#4488aa;
+}
+.button-deactive{
+	color:rgba(70,70,70,0.3);
+}
+.dialog{
+	display: none;
+}

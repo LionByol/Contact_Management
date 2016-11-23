@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load staticfiles %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" /> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'polls/main.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+<script>
+$(document).ready(function(){
+	var str;
+	var showindex=0;
+	var i=0;
+	var totalpage, leftitem, showcontact,realpage,number;
+	number = {{number}};
+	showcontact = {{showcontact}};
+	totalpage = Math.floor({{totalcontact}}/{{showcontact}});
+	leftitem = {{totalcontact}} - {{showcontact}}*totalpage;
+	if(leftitem != 0) realpage = totalpage +1;
+	else realpage = totalpage;	
+	i=0;
+
+	str='<tr><th style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></th><th style="width:17%">Email</th><th style="width:16%">Name</th><th style="width:16%">Company</th><th style="width:16%">Source</th><th style="width:16%">Last touch</th><th style="width:16%">Next touch</th></tr>';
+	$("#mainlist").append(str);
+
+	{% for data in contactdata %}
+		i++;		
+		if(i>showindex*showcontact && i<=showcontact+showindex*showcontact){
+			str='<tr><td style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></td><td style="width:20%">{{data.email}}</td><td style="width:16%">{{data.name}}</td><td style="width:16%">{{data.company}}</td><td style="width:16%">{{data.source}}</td><td style="width:16%">{{data.lasttouch}}</td><td style="width:16%">{{data.nexttouch}}</td></tr>'
+			$("#mainlist").append(str);
+		}		
+	{% endfor %}
+
+	if(number == 1){
+
+	}
+	$("#success-alert").fadeTo(2000, 500).slideUp(500)
+    
+});
+</script>
+</head>
+<body>		
+	<div style="width: 49%; height: 1200px; padding-top:40px; padding-left: 30px; padding-right:30px; background-color: #eeeeee; margin-left:25%;" >
+		<table>
+			<tr>
+				<td width="300px">
+					<h1>Prospects</h1>
+				</td>
+				<td>
+					<input id="addBtn" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal" type="button" value="+   Add prospects" name="Add prospects" style="width: 170px; height:32px; color: #ffffff; background-color: #459999; margin-left: 70%; padding:0" onclick="addProspects(this)"></input>					
+				</td>
+			</tr>
+			<tr style="height: 18px;">		
+			</tr>
+			<tr>
+				<td style="width: 24%; background-color: #dddddd">
+					<div style="width: 128%; height: 490px; padding: 15px; padding-top: 20px;">
+						<form action="{% url 'contact_list:search' %}" method="post">{% csrf_token %}
+							<input type="search" name="search" id="search" placeholder="Find a prospects ..." style="height: 34px; width: 75%; border-radius: 4px;">
+							<!-- <input type="submit" id="search" value="Go" style="height: 34px; border-radius: 4px; color:grey"> -->
+						</form>						
+						<h5 style="margin-top: 30px; margin-bottom:20px;">Filter your prospects</h5>
+						
+						<select name="By campagin" style="width: 75%;">
+							<option>By campagin</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+						<select name="By list" style="width: 75%;">
+							<option>By list</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+						<select name="Opens: any" style="width: 75%;">
+							<option>Opens: any</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+						<select name="Replies: any" style="width: 75%;">
+							<option>Replies: any</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+						<select name="Clicks: any" style="width: 75%;">
+							<option>Clicks: any</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+						<select name="Opt out: any" style="width: 75%;">
+							<option>Opt out: any</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+					</div>
+				</td>		
+			</tr>
+		</table>
+		{% if number == 1 %}
+			<div class="alert alert-success" id="success-alert" style="background-color:#484a47; color:#c7dac8; margin-top: 100px; margin-left: -30px; width: 30%;">
+			1 Prospect added<strong style="color:#74ccbc; margin-left: 20%;">DISMISS</strong>
+  			</div>
+		{%endif%}
+		<div style="position: absolute;left: 39.5%; top: 127px; background-color:#eeeeee; width:31.3%; height:800px;">
+			<table>
+				<tr>
+					<td style="width:25%">
+						<select name="Bulk actions" style="width: 200px;">
+							<option>Bulk actions</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+					</td>
+					<td style="width: 5px;"></td>
+					<td style="width:31%">
+						<input type="button" name="Apply" value="Apply" style="height: 40px; width:90px; position: relative; top:-10px; color:#449999">
+					</td>
+					<td>					
+						<label id="dataItem"></label>
+					</td>
+					<td style="">					
+						<input class="button-deactive"; id="prev-btn" type="button" name="prev" value="<" style="height: 40px; width:40px; position: relative; top:-10px; font-size:20px; margin:0;" onclick="prev_click(this)">
+						<input class="button-active"; id="next-btn" type="button" name="next" value=">" style="height: 40px; width:40px; position: relative; top:-10px;  font-size:20px; margin:0;" onclick="next_click(this)">
+					</td>
+				</tr>
+			</table>		
+			<table id="mainlist" style="width:100%; margin-bottom: 20px;">			
+										
+			</table>
+			<table>
+				<tr>
+					<td style="width:25%">
+						<select name="Bulk actions" style="width: 200px;">
+							<option>Bulk actions</option>
+							<!-- <option>dfsfsd</option>
+							<option>dfsfsd</option>
+							<option>dfsfsd</option> -->
+						</select>
+					</td>
+					<td style="width: 5px;"></td>
+					<td style="width:31%">
+						<input type="button" name="Apply" value="Apply" style="height: 40px; width:90px; position: relative; top:-10px; color:#449999">
+					</td>
+					<td>
+						<label id="dataItem2"></label>
+					</td>
+					<td style="">					
+						<input class="button-deactive"; id="prev-btn2" type="button" name="prev" value="<" style="height: 40px; width:40px; position: relative; top:-10px; font-size:20px; margin:0;" onclick="prev_click(this)">
+						<input class="button-active"; id="next-btn2" type="button" name="next" value=">" style="height: 40px; width:40px; position: relative; top:-10px;  font-size:20px; margin:0;" onclick="next_click(this)">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" role="dialog">
+	    <div class="modal-dialog" style="width:400px; margin-top:150px;">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header" style="border-bottom:0px; padding-top:20px; padding-bottom:20px">
+	          <!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+	          <h4 class="modal-title" align="center">How would you like to add prospects?</h4>
+	        </div>
+	        <div class="modal-body">
+	          <div class="row">
+				  <div class="col-sm-6">
+				  	  {% load staticfiles %}
+				  	  <div class="" data-toggle="modal" data-dismiss="modal" data-target="#myModalMan" id="addMan" style="align:center; margin-top:9px;" align="center">
+				  	  	  <img src="{% static 'polls/images/man.png' %}"><br /><br />
+				  	  	  <h5>Add single prospect</h5>
+				  	  </div>				  	  	
+				  </div>
+				  <div class="col-sm-6">
+				  	  {% load staticfiles %}
+				  	  <div class="" id="addCsv" style="align:center" align="center">
+				  	  	  <!-- <a href="http://127.0.0.1:8000/contact_list/csvUploadView/"> -->
+				  	  	  <a href="{% url 'contact_list:csvUploadView' %}">
+					  	  	  <img src="{% static 'polls/images/csv.png' %}"><br /><br />
+					  	  	  <h5>Import list</h5>
+				  	  	  </a>
+				  	  </div>
+				  </div>
+			  </div>
+	        </div>
+	        <div class="modal-footer" style="border-top:0px;">
+	          <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-right:25px;">Cancel</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+  	</div>
+  	<!-- Modal Man -->
+	<div class="modal fade" id="myModalMan" role="dialog">
+	    <div class="modal-dialog" style="width:400px; margin-top:150px;">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content" style="padding:15px;">  
+	      		<div class="container">      
+	            	<form action="{% url 'contact_list:cost' %}" method="post">{% csrf_token %}
+	            		<h4 class="modal-title" style="margin-bottom: 20px;">New prospect</h4>
+					    <P><B>Email:</B><input type="text" id="email" name="email" style="margin-left: 30px;">
+					    <P><B>Name:</B><input type="text" id="name" name="name" style="margin-left: 30px;">
+					    <P><B>Company:</B><input type="text" id="company" name="company" style="margin-left: 3px;">	
+					    <p>
+	          			<button type="button" class="btn btn-default" data-dismiss="modal" style="margin-left:165px; margin-top:2px; color:#3ea9b1; background-color:#fff;">Cancel</button>				    
+					    <input type="submit" id="submit" value="Add prospect" style="color:#fff; background-color:#3ea9b1; height: 34px;border-radius: 4px; margin-top:19px;">
+					</form>
+				</div>   
+	      </div>
+	      
+	    </div>
+  	</div>
+
+<script>
+	var str;
+	var showindex=0;
+	var i=0;
+	var j;
+	var totalpage, leftitem, showcontact, totalcontact, realpage;
+	showcontact = {{showcontact}};
+	totalcontact = {{totalcontact}};
+	totalpage = Math.floor({{totalcontact}}/{{showcontact}});
+	leftitem = {{totalcontact}} - {{showcontact}}*totalpage;
+	if(leftitem != 0) realpage = totalpage +1;
+	else realpage = totalpage;	
+	i=0;
+	var text1,text2,text3;
+    		text1 = 1 + showindex*showcontact;
+    		text2 = text1 + showcontact -1;
+    		text3 = totalcontact;
+	document.getElementById("dataItem").textContent=text1+"--"+text2+" of "+text3;
+	document.getElementById("dataItem2").textContent=text1+"--"+text2+" of "+text3;
+	// add prospectanually
+	      
+	function addMan(){
+		// alert("fed");
+	}
+	$('#submit').click(function(){
+		// alert($('#email2').val());
+		{{{
+			contactlist=Contactlist(email="kkl@.com", name="dragon",
+    		company="sorex", source="manual", lasttouch="07/30/16", nexttouch="07/31/16")
+    		contactlist.save()
+		}}}
+	});
+	// click events
+	function prev_click(r){
+    	if(showindex>0){
+    		//Delete exsiting table
+    		// var i = r.parentNode.parentNode.rowIndex;  //i=0;
+    		if(showindex == realpage - 1){
+    			for(j=0;j<=leftitem;j++){
+    				document.getElementById("mainlist").deleteRow(0);
+    			}
+    		}
+    		else{
+    			for(j=0;j<=showcontact;j++){
+    				document.getElementById("mainlist").deleteRow(0);
+    			}
+    		}  		
+    		showindex -= 1;
+
+    		var text1,text2,text3;
+    		text1 = 1 + showindex*showcontact;
+    		text2 = text1 + showcontact -1;
+    		text3 = {{totalcontact}}; 
+    		document.getElementById("dataItem").textContent=text1+"--"+text2+" of "+text3;
+    		document.getElementById("dataItem2").textContent=text1+"--"+text2+" of "+text3;
+
+    		
+	    	i=0;
+	    	str='<tr><th style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></th><th style="width:17%">Email</th><th style="width:16%">Name</th><th style="width:16%">Company</th><th style="width:16%">Source</th><th style="width:16%">Last touch</th><th style="width:16%">Next touch</th></tr>';
+			$("#mainlist").append(str);
+	    	{% for data in contactdata %}
+			i++;
+			if(i>showindex*showcontact && i<=showcontact+showindex*showcontact){
+				str='<tr><td style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></td><td style="width:20%">{{data.email}}</td><td style="width:16%">{{data.name}}</td><td style="width:16%">{{data.company}}</td><td style="width:16%">{{data.source}}</td><td style="width:16%">{{data.lasttouch}}</td><td style="width:16%">{{data.nexttouch}}</td></tr>'
+				$("#mainlist").append(str);
+			}		
+			{% endfor %}
+			if(showindex == 0){
+				$("#prev-btn").removeClass("button-active");
+        		$("#prev-btn").addClass("button-deactive");
+        		$("#prev-btn2").removeClass("button-active");
+        		$("#prev-btn2").addClass("button-deactive");
+			}
+			if(showindex == realpage -2){
+				$("#next-btn").removeClass("button-deactive");
+				$("#next-btn").addClass("button-active");
+				$("#next-btn2").removeClass("button-deactive");
+				$("#next-btn2").addClass("button-active");
+			}
+		}	        
+    }
+    function next_click(r){
+    	if(showindex<realpage-1){
+    		showindex += 1;
+    		//delete exisiting table
+        	var j;	for(j=0;j<=showcontact;j++){
+    			document.getElementById("mainlist").deleteRow(0);
+    		}
+    		var text1,text2,text3;
+    		if(showindex<realpage - 1){
+    			text1 = 1 + showindex*showcontact;
+    			text2 = text1 + showcontact -1;
+    			text3 = {{totalcontact}}; 
+    			document.getElementById("dataItem").textContent=text1+"--"+text2+" of "+text3;
+    			document.getElementById("dataItem2").textContent=text1+"--"+text2+" of "+text3;
+    		}
+    		else{
+    			text1 = 1 + showindex*showcontact;
+    			text2 = totalcontact;
+    			text3 = {{totalcontact}}; 
+    			document.getElementById("dataItem").textContent=text1+"--"+text2+" of "+text3;
+    			document.getElementById("dataItem2").textContent=text1+"--"+text2+" of "+text3;
+    		}
+    		
+	    	i=0;
+	    	str='<tr><th style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></th><th style="width:17%">Email</th><th style="width:16%">Name</th><th style="width:16%">Company</th><th style="width:16%">Source</th><th style="width:16%">Last touch</th><th style="width:16%">Next touch</th></tr>';
+			$("#mainlist").append(str);
+	    	{% for data in contactdata %}
+			i++;
+			if(i>showindex*showcontact && i<=showcontact+showindex*showcontact){
+				str='<tr><td style="width:2%"><input type="checkbox" style="width:20px; padding:0; margin:0;"></input></td><td style="width:20%">{{data.email}}</td><td style="width:16%">{{data.name}}</td><td style="width:16%">{{data.company}}</td><td style="width:16%">{{data.source}}</td><td style="width:16%">{{data.lasttouch}}</td><td style="width:16%">{{data.nexttouch}}</td></tr>'
+				$("#mainlist").append(str);
+			}		
+			{% endfor %}    
+			if(showindex == realpage -1){
+				$("#next-btn").removeClass("button-active");
+				$("#next-btn").addClass("button-deactive");
+				$("#next-btn2").removeClass("button-active");
+				$("#next-btn2").addClass("button-deactive");
+			}
+			if(showindex == 1){
+				$("#prev-btn").removeClass("button-deactive");
+        		$("#prev-btn").addClass("button-active");
+        		$("#prev-btn2").removeClass("button-deactive");
+        		$("#prev-btn2").addClass("button-active");
+			}
+		}    
+    }    
+    function addProspects(r){    	
+    	// $('#dialog').dialog('open');
+    	$('#dialog').show();
+    }      
+</script>
+</body>
+</html>

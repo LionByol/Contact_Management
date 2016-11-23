@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+{% load staticfiles %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" /> -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'polls/main.css' %}" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+<script>
+$(document).ready(function(){
+	
+});
+</script>
+</head>
+<body>		
+	<div class="container" style="margin:50px;">
+		<div class="header">
+			<table class="">
+				<tr>
+					<td style="">
+						<h1 style="font-size:55px;">Import Prospects</h1>
+					</td>
+					<td style="vertical-align: bottom; position: relative; left: 10%;  color:grey;">SELECT FILE</td>
+					<td style="vertical-align: bottom; color:grey; position: relative; left: 15%;">></td>
+					<td style="vertical-align: bottom; position: relative; left: 20%;"><b>MATCH FIELDS</b></td>
+					<td style="vertical-align: bottom; position: relative; left: 73%;">
+						<button class="btn" style="background-color: white; border-color:#d2d4d2;color: rgb(87, 189, 180);width: 130%;" onclick="cancelimportCsv()">Cancel</button>
+					</td>
+					<td  style="vertical-align: bottom; position: relative; left: 78%;">
+						<form action="{% url 'contact_list:csvComplete' %}" method="post">{% csrf_token %}
+							<input type="submit" value="Complete Import -->" class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="completeImport()";>
+						</form>
+						<!-- <button class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="completeImport()";>Complete Import -></button> -->
+					</td>
+				</tr>
+			</table>			
+		</div>	
+		<div class="content">
+			<h3 style="margin-top: 40px; font-size:20px"><b style="font-size:30px">147</b>&nbsp Prospects identified</h3>
+			<p>
+			<h3 style="margin-top: 30px; font-size:20px; margin-bottom:50px">Now, let's match the columns in your uploaded list to Replyify fields</h3>
+			<div id="ReplyifyField" style="width:35%; margin-bottom:50px">
+				<h5 style="color:grey">Replyify field</h5>
+				<select name="Email" style="width: 100%;">
+						<option>Email</option>							
+						<option>Name</option>
+						<option>Company</option>							
+						<option>[do not import this field]]</option>					
+				</select>
+				<select name="Name" style="width: 100%;">
+						<option>Name</option>
+						<option>Email</option>
+						<option>Company</option>
+						<option>[do not import this field]]</option>					
+				</select>
+				<select name="Company" style="width: 100%;">
+						<option>Company</option>
+						<option>Name</option>
+						<option>Email</option>
+						<option>[do not import this field]]</option>					
+				</select>
+				
+			</div>
+			<div id="YourData" style="left: 36%;position: relative;width: 98.5%;height: 60px;margin-top: -192px; margin-left:2%;top: -55px;">
+				<h5 style="color:grey">Your data</h5>
+				<table class="table" id="csvdata">
+					<tr style="height:58px;">
+						<td>{{data10}}</td>						
+						<td>{{data20}}</td>						
+						<td>{{data30}}</td>						
+					</tr>
+					<tr style="height:58px;">
+						<td>{{data11}}</td>						
+						<td>{{data21}}</td>						
+						<td>{{data31}}</td>						
+					</tr>
+					<tr style="height:58px;">
+						<td>{{data12}}</td>						
+						<td>{{data22}}</td>						
+						<td>{{data32}}</td>						
+					</tr>					
+				</table>
+			</div>
+
+		</div>	
+		<div class="footer" style="margin-top:100px">
+			<hr style="border-top: 1px solid #c1b9b9">
+			<table class="">
+				<tr>					
+					<td style="vertical-align: bottom; position: relative; left: 550%;">
+						<button class="btn" style="background-color: white; border-color:#d2d4d2;color: rgb(87, 189, 180);width: 130%;"  onclick="cancelimportCsv()">Cancel</button>
+					</td>
+					<td  style="vertical-align: bottom; position: relative; left: 568%;">
+						<form action="{% url 'contact_list:csvComplete' %}" method="post">{% csrf_token %}
+							<input type="submit" value="Complete Import -->" class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="completeImport()";>
+						</form>
+						<!-- <button class="btn" style="background-color: #39b2c3; border-color:#d2d4d2;color: rgb(224, 228, 228);width: 130%;" onclick="completeImport()";>Complete Import -></button> -->
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+<script>
+	
+	$('input[type=file]').change(function () {
+         var filePath=$('#fileUpload').val(); 
+         // alert(filePath);
+         document.getElementById("uploadFilePath").value = filePath;
+     });
+	function cancelimportCsv(){
+		window.location.href = "/contact_list/csvUploadView";
+	}
+	function completeImport(){
+		// window.location.href = "/contact_list/csvUploadView";
+		// alert("CSV File Import TESTING!");
+	}
+</script>
+</body>
+</html>
