@@ -14,6 +14,6 @@ cd Contact_Management
 
 Build and install client apps
 cd Contact_Management
-python manage.py runserver"# Contact_Management" 
+python manage.py runserver" Contact_Management" 
 "# Contact_Management" 
 "# Contact_Management" 
